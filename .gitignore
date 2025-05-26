@@ -1,0 +1,3 @@
+config/.env
+db.sqlite3
+venv
