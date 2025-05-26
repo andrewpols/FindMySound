@@ -1,0 +1,12 @@
+# Recommender-system specific
+pandas
+jupyter
+ffmpeg-python
+imageio-ffmpeg
+scikit-learn
+aiohttp
+python-dotenv
+
+# Web-App framework
+django
+django-cors-headers
