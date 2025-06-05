@@ -1,0 +1,18 @@
+{
+  "static/img/react.svg": {
+    "file": "django-assets/react-CHdo91hT.svg",
+    "src": "static/img/react.svg"
+  },
+  "static/js/main.jsx": {
+    "file": "django-assets/test-zSWDhvyu.js",
+    "name": "test",
+    "src": "static/js/main.jsx",
+    "isEntry": true,
+    "css": [
+      "django-assets/test-D8b4DHJx.css"
+    ],
+    "assets": [
+      "django-assets/react-CHdo91hT.svg"
+    ]
+  }
+}

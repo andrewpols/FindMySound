@@ -1,0 +1,18 @@
+{
+  "static/img/recommender/react.svg": {
+    "file": "django-assets/react-CHdo91hT.svg",
+    "src": "static/img/recommender/react.svg"
+  },
+  "static/js/recommender/main.jsx": {
+    "file": "django-assets/test-S3Jl_cKX.js",
+    "name": "test",
+    "src": "static/js/recommender/main.jsx",
+    "isEntry": true,
+    "css": [
+      "django-assets/test-D8b4DHJx.css"
+    ],
+    "assets": [
+      "django-assets/react-CHdo91hT.svg"
+    ]
+  }
+}

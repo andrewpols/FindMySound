@@ -22,24 +22,14 @@ class SongAnalysis(models.Model):
     valence = models.FloatField()
 
     def __str__(self):
-        return {
-            'acousticness': self.acousticness,
-            'danceability': self.danceability,
-            'energy': self.energy,
-            'instrumentalness': self.instrumentalness,
-            'liveness': self.liveness,
-            'loudness': self.loudness,
-            'speechiness': self.spechiness,
-            'tempo': self.tempo,
-            'valence': self.valence
-        }
+        return f"Analysis: valence={self.valence}, tempo={self.tempo}, energy={self.energy}"
 
 
 class Song(models.Model):
     song_title = models.CharField(max_length=200)
-    artist = models.ForeignKey(Artist, on_delete=models.CASCADE)
+    artist = models.ForeignKey(Artist, null=True, on_delete=models.SET_NULL)
+    analysis = models.ForeignKey(SongAnalysis, null=True, on_delete=models.SET_NULL)
     isrc = models.CharField(max_length=200, primary_key=True)
-    analysis = models.ForeignKey(SongAnalysis, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.song_title

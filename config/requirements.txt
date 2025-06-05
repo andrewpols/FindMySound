@@ -9,4 +9,14 @@ python-dotenv
 
 # Web-App framework
 django
+djangorestframework
+djangorestframework-simplejwt
 django-cors-headers
+
+
+
+############# Frontend Requirements #############
+# node.js
+# vite
+# react-router-dom
+# axios
