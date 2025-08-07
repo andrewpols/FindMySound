@@ -19,7 +19,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 
 SPOTIFY_JSON = "../data/example-api-responses/spotify-ovoxo-playlist.json"
 
-load_dotenv(dotenv_path="..˜˜˜˜˜˜˜˜˜††˜˜˜˜/config/.env")
+load_dotenv(dotenv_path="../config/.env")
 
 
 # TODO — Overall Goals: Add feature vector components like "Artist in user playlist" or "genre in user playlist"
