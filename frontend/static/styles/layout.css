@@ -1,3 +1,10 @@
+#page-container {
+    display: flex;
+    flex-direction: column;
+
+    min-height: 100vh;
+}
+
 #header {
     position: fixed;
     top: 0;
@@ -7,8 +14,8 @@
     box-sizing: border-box;
     padding: 5px 30px 0 48px;
     width: 100%;
+    height: 90px;
     max-width: 100vw;
-    height: 80px;
     margin: 0;
 
     background-color: rgba(5, 5, 5, 1);
@@ -39,19 +46,22 @@ ul {
 
 
 .nav-btn, .dropdown-menu button {
+    width: max-content;
     height: 100%;
     background-color: transparent;
     border: 0;
-    outline: none;
     transition: transform 0.4s;
 
     display: flex;
     flex-wrap: nowrap;
     border-radius: 0;
     padding: 0;
+    font-size: 1.1rem;
+    font-weight: normal;
+
 }
 
-.nav-btn:hover a, .dropdown-menu button:hover a  {
+.nav-btn:hover a, .dropdown-menu button:hover a {
     color: #70e297;
 }
 
@@ -76,11 +86,24 @@ a {
 
 
 #profile-btn {
+    width: 60px;
+    height: 60px;
+    border-radius: 100%;
+    position: relative;
     color: white;
     align-items: center;
-    outline: none;
     padding: 0;
+    outline: none;
 
+    img {
+        width: 100%;
+        height: 100%
+    }
+
+    &:focus-visible {
+        outline: 2px solid #5ed680;
+        outline-offset: 7px;
+    }
 }
 
 #profile-btn:hover, #dropdown-btn:hover {
@@ -132,19 +155,21 @@ a {
 
     background: #131212;
     border-radius: 6px;
-    box-shadow: rgba(120, 120, 120, 0.6) 0 0 6px ;
+    box-shadow: rgba(120, 120, 120, 0.6) 0 0 6px;
 }
 
-.dropdown-menu  button {
+.dropdown-menu a {
     width: 100%;
-    transition-delay: 0s;
+    box-sizing: border-box;
+    font-weight: 600;
+
+    display: flex;
+    transition: color 0s;
+    padding: 10px 20px;
 }
 
 .dropdown-menu .first-dropdown-btn {
     border-radius: 6px 6px 0 0;
-
-    display: flex;
-    flex-direction: column;
 }
 
 .dropdown-menu .middle-dropdown-btn {
@@ -155,41 +180,126 @@ a {
     border-radius: 0 0 6px 6px;
 }
 
-.dropdown-menu button:hover {
+.dropdown-menu a:hover {
     background: #1c1a1a;
 }
 
-.dropdown-menu button a {
-    display: flex;
-    transition: color 0s;
-    font-weight: lighter;
-    padding: 10px 20px;
-    width: max-content;
-}
-
 #profile-img {
-    width: 40px;
+    width: 100%;
+    height: 100%;
+    position: absolute;
     border-radius: 50%;
 }
 
-#profile-img:hover {
+#profile-img.default:hover {
     filter: brightness(0) saturate(100%) invert(55%) sepia(62%) saturate(604%) hue-rotate(88deg) brightness(92%) contrast(86%);
 }
 
-#profile-img:active {
+#profile-img.default:active {
     box-shadow: rgb(255, 255, 255) 0 0 0;
     margin-left: 1px;
     margin-right: 1px;
-    width: 38px;
+    width: 90%;
+    height: 90%;
     filter: brightness(0) saturate(100%) invert(29%) sepia(95%) saturate(800%) hue-rotate(103deg) brightness(103%) contrast(83%);
+}
+
+#profile-img.custom {
+    box-sizing: content-box;
+    border: 5px solid #201f1f;
+}
+
+#profile-img.custom:hover {
+    border: 6px solid #201f1f;
+    width: 105%;
+    height: 105%;
+
+    left: -2.5%;
+}
+
+#profile-img.custom:active {
+    border: 4px solid #201f1f;
+    top: -4px;
+    left: 0;
 }
 
 #divider {
     border: 0;
     border-top: 1px solid rgba(60, 58, 58, 0.5);
     position: relative;
-    top: -10px;
+    top: -8px;
     left: -48px;
 
     width: 100vw;
+}
+
+
+#main-content {
+    flex: 1;
+    padding-top: 90px; /* header height */
+    box-sizing: content-box;
+    height: 100vh;
+    width: 100%;
+
+    display: block;
+
+    /*display: flex;*/
+    /*align-items: center;*/
+    /*justify-content: center;*/
+
+}
+
+/* Footer just flows to the bottom */
+#footer {
+    background: #070707;
+    padding: 1.25em 4em;
+    text-align: center;
+
+    z-index: 1000;
+    width: 100%;
+
+    font-size: 1.1rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    p {
+        z-index: 20;
+        color: white;
+        margin: 0;
+    }
+
+    #pols-external-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        gap: 3em;
+    }
+
+    #pols-external-route {
+        width: max-content;
+        height: max-content;
+
+        transition: color 0.1s;
+
+        div {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.3em;
+        }
+
+        &:hover #pols-external-img {
+            filter: brightness(0) saturate(100%) invert(85%) sepia(27%) saturate(713%) hue-rotate(78deg) brightness(92%) contrast(92%);
+        }
+    }
+
+    #pols-external-img {
+        width: 1.5em;
+        filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(0%) hue-rotate(335deg) brightness(108%) contrast(108%);
+
+        transition: filter 0.1s;
+    }
 }

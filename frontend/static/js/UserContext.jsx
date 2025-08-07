@@ -1,14 +1,14 @@
 import React, {createContext, useContext, useEffect, useState} from "react";
 import axios from "axios";
 
-export async function getUserData({setIsLoggedIn, setUsername, setIsLoading}) {
+export async function getUserData({setIsLoggedIn, setUser, setIsLoading}) {
 
     try {
         const accessToken = localStorage.getItem('accessToken');
 
         if (!accessToken) {
             setIsLoggedIn(false);
-            setUsername(null);
+            setUser(null);
             setIsLoading(false);
             return
         }
@@ -20,15 +20,17 @@ export async function getUserData({setIsLoggedIn, setUsername, setIsLoading}) {
         }
 
         const response = await axios.get('/api/info/', config);
-        const username = response.data.username;
 
+        const user = response.data;
         setIsLoggedIn(true);
-        setUsername(username);
+        setUser(user);
+
+
         setIsLoading(false);
 
     } catch (error) {
         setIsLoggedIn(false);
-        setUsername(null);
+        setUser(null);
         setIsLoading(false);
     }
 
@@ -37,22 +39,31 @@ export async function getUserData({setIsLoggedIn, setUsername, setIsLoading}) {
 
 export const UserContext = createContext({
     isLoggedIn: false,
-    username: null,
+    user: null,
     isLoading: true,
 });
+
 
 export default function UserProvider({children}) {
 
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [username, setUsername] = useState(null);
+    const [user, setUser] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        getUserData({setIsLoggedIn, setUsername, setIsLoading});
+        getUserData({setIsLoggedIn, setUser, setIsLoading});
     }, []);
 
+
     return (
-        <UserContext.Provider value={{ isLoggedIn, setIsLoggedIn, username, setUsername, isLoading }}>
+        <UserContext.Provider value={{
+            isLoggedIn,
+            setIsLoggedIn,
+            user,
+            setUser,
+            isLoading,
+            setIsLoading
+        }}>
             {children}
         </UserContext.Provider>
     );
@@ -61,4 +72,17 @@ export default function UserProvider({children}) {
 // Returns corresponding user context for other React components to easily call
 export function useUser() {
     return useContext(UserContext);
+}
+
+
+export function getUTCTimestamp(datetime = '') {
+    if (datetime && typeof datetime === "string") {
+        try {
+            return Date.parse(datetime);
+        } catch (e) {
+            return Date.now()
+        }
+    } else {
+        return Date.now()
+    }
 }

@@ -1,21 +1,26 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
+import {useLocation} from "react-router-dom";
 
-export default function Error404() {
+export default function Error({manualError}) {
+
+    const {state} = useLocation();
+    const [errorMsg, setErrorMsg] = useState('');
+
+    useEffect(() => {
+        let error;
+        if (state) {
+            error = state.error;
+        }
+        error ? setErrorMsg(error) : setErrorMsg("ERROR 404: Page Not Found");
+    }, [])
+
     return (
         <>
-            <h1>
-                ERORR 404: Page Not Found
-            </h1>
+            <div style={{display: "flex", alignItems: "center", justifyContent: "center", margin: "auto", height: "calc(100vh - 210px)"}}>
+                <h1>
+                    {manualError || errorMsg}
+                </h1>
+            </div>
         </>
-    );
-}
-
-export function Error403() {
-    return (
-        <>
-            <h1>
-                ERORR 403: Forbidden
-            </h1>
-        </>
-    );
+    )
 }

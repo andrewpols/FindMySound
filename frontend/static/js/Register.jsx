@@ -1,23 +1,24 @@
 import React from 'react';
 import {useState, useEffect} from 'react';
-import {useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import axios from 'axios';
 
-import {useUser} from "./UserContext.jsx";
+import {getUTCTimestamp, useUser} from "./UserContext.jsx";
 
 import "../styles/register.css"
+import AuthWrapper from "./AuthWrapper.jsx";
 
 
 export default function Register() {
 
     // If user already logged in, we route them to main page instead of the sign-up page.
     // Loading isLoggedIn is purely for the purpose of checking if we should let the user proceed in signing up.
-    const {isLoggedIn, isLoading} = useUser()
+    const {isLoggedIn, isLoading, setIsLoggedIn, setUser} = useUser()
     const navigate = useNavigate()
 
     useEffect(() => {
 
-        if (!isLoading && isLoggedIn) navigate("/FindMySound/")
+        if (!isLoading && isLoggedIn) navigate("/FindMySound/music/select")
 
     }, [isLoggedIn, isLoading])
 
@@ -49,13 +50,20 @@ export default function Register() {
         }
 
         setIsSubmitLoading(true);
+        setErrorMsg("");
 
         try {
-            const response = await axios.post('/api/signup/', formData)
+            const response = await axios.post('/api/signup/', formData);
+
+            const userInfo = response.data.user
+
+            setIsLoggedIn(true);
+            setUser(userInfo);
+
             localStorage.setItem('accessToken', response.data.tokens.access);
             localStorage.setItem('refreshToken', response.data.tokens.refresh);
 
-            navigate("/FindMySound/");
+            navigate("/FindMySound/music/select");
 
         } catch (error) {
 
@@ -65,19 +73,14 @@ export default function Register() {
 
             let errorToAdd;
 
-            if (error.response && error.response.data && Object.prototype.toString.call(error.response.data) === '[object Object]') {
-                Object.keys(error.response.data).forEach(errorKey => {
-                    const errorMessages = error.response.data[errorKey]
+            Object.keys(error?.response?.data)?.forEach(errorKey => {
+                const errorMessages = error.response.data[errorKey]
 
-                    if (errorMessages && errorMessages.length > 0) {
-                        errorToAdd = msgMap[errorMessages[0]] || errorMessages[0]
-                    }
-                    setErrorMsg(errorToAdd);
-                })
-
-            } else {
-                errorToAdd = `STATUS: ${error.status}. Error creating user. Please provide valid inputs.`
-            }
+                if (errorMessages && errorMessages.length > 0) {
+                    errorToAdd = msgMap[errorMessages[0]] || errorMessages[0]
+                }
+                setErrorMsg(errorToAdd);
+            })
 
             setErrorMsg(errorToAdd);
 
@@ -120,11 +123,16 @@ export default function Register() {
             <button id="submit-btn" type="submit" onClick={handleSubmit} disabled={isSubmitLoading}>
                 Submit
             </button>
+
+            <Link className="sign-up-route" to="/FindMySound/login">Already have an account? Log In Here.</Link>
+
         </>;
 
     return (
         <>
-            { !isLoggedIn && registerComponent }
+            <div id="register-div">
+                {!isLoggedIn && registerComponent}
+            </div>
         </>
     );
 }

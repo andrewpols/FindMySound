@@ -1,12 +1,28 @@
-from .models import CustomUser
+from .models import CustomUser, UserSpotifyProfile
 from rest_framework import serializers
 from django.contrib.auth import authenticate
 
+from recommender.serializers import UserPlaylistSerializer
+
+
+class UserSpotifyProfileSerializer(serializers.ModelSerializer):
+    user_playlists = UserPlaylistSerializer(read_only=True, many=True)
+
+    class Meta:
+        model = UserSpotifyProfile
+
+        # Only the stuff I want frontend seeing (i.e. not tokens)
+        fields = ("id", "spotify_username", "spotify_profile_image", "access_token_expiry", "user_playlists",
+                  "last_synced", "spotify_id", "scopes_granted", "songs_recommended", "playlists_created",
+                  "artists_discovered")
+
 
 class CustomUserSerializer(serializers.ModelSerializer):
+    spotify_profile = UserSpotifyProfileSerializer(read_only=True)
+
     class Meta:
         model = CustomUser
-        fields = ("id", "username", "email")
+        fields = ("id", "username", "email", "spotify_profile")
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):

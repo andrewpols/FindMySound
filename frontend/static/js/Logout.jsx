@@ -6,7 +6,7 @@ import axios from "axios";
 import {useUser} from "./UserContext.jsx";
 
 export default function Logout() {
-    const {isLoggedIn, setIsLoggedIn, setUsername, isLoading} = useUser();
+    const {isLoggedIn, setIsLoggedIn, setUser, isLoading} = useUser();
 
     const navigate = useNavigate();
 
@@ -36,7 +36,7 @@ export default function Logout() {
                 localStorage.removeItem("accessToken");
 
                 setIsLoggedIn(false);
-                setUsername(null);
+                setUser(null);
 
                 navigate("/FindMySound/");
 

@@ -6,6 +6,8 @@ import {useUser} from "./UserContext.jsx"
 import "../styles/layout.css"
 import fmsLogo from "/FindMySound.svg";
 import defaultProfile from "../img/Default_pfp.svg"
+import linkedInSVG from "../img/iconmonstr-linkedin-3.svg";
+import githubSVG from "../img/github-mark.svg";
 
 export function DropdownInfo({menuItems}) {
     return (
@@ -27,21 +29,17 @@ export function DropdownInfo({menuItems}) {
 // Not entirely necessary, but streamlines the process of repeating these components 2-3 times in profileButtons
 export function ButtonLinkComponent({buttonText, linkPath}) {
     return (
-        <button className="nav-btn">
-            <Link to={`/FindMySound/${linkPath}`}>{buttonText}</Link>
-        </button>
+        <Link to={`/FindMySound/${linkPath}`} className="nav-btn">{buttonText}</Link>
     );
 }
 
 export function ButtonLinkDropdownComponent({buttonText, linkPath, order}) {
     return (
-        <button className={`${order}-dropdown-btn`}>
-            <Link to={`/FindMySound/${linkPath}`}>{buttonText}</Link>
-        </button>
+        <Link to={`/FindMySound/${linkPath}`} className={`${order}-dropdown-btn`}>{buttonText}</Link>
     );
 }
 
-export function ButtonDropdownComponent({profileImg, text = 'Text', menuItems = []}) {
+export function ButtonDropdownComponent({profileImg, isLoading, menuItems = []}) {
 
     const [showProfile, setShowProfile] = useState(false);
 
@@ -52,7 +50,10 @@ export function ButtonDropdownComponent({profileImg, text = 'Text', menuItems = 
         } else if (event.target.id === "profile-btn" || event.target.id === "profile-img") {
             setShowProfile(true);
 
-            document.getElementById('profile-img').style.filter = 'brightness(0) saturate(100%) invert(29%) sepia(95%) saturate(800%) hue-rotate(103deg) brightness(103%) contrast(83%)';
+            if (!profileImg && !isLoading) {
+                document.getElementById('profile-img').style.filter = 'brightness(0) saturate(100%) invert(29%) sepia(95%) saturate(800%) hue-rotate(103deg) brightness(103%) contrast(83%)';
+            }
+
         }
     }
 
@@ -70,11 +71,14 @@ export function ButtonDropdownComponent({profileImg, text = 'Text', menuItems = 
 
     }, [showProfile]);
 
-
     return (
         <div className="button-dropdown">
             <button className="nav-btn" id="profile-btn">
-                {profileImg ? <img src={profileImg} alt='profile image' id="profile-img"/> : text}
+                {
+                    profileImg ?
+                        <img src={profileImg} alt='profile image' id="profile-img" className="custom"/> :
+                        <img src={defaultProfile} alt='profile image' id="profile-img" className="default"/>
+                }
             </button>
             {showProfile && <DropdownInfo menuItems={menuItems}/>}
         </div>
@@ -82,8 +86,7 @@ export function ButtonDropdownComponent({profileImg, text = 'Text', menuItems = 
 }
 
 export default function Layout() {
-    const userInfo = useUser();
-    const isLoggedIn = userInfo.isLoggedIn;
+    const {isLoggedIn, user, isLoading} = useUser();
 
     const mapInfoToButtons = (componentsArray, Button, map, requiresLogIn) => {
         /*
@@ -99,9 +102,8 @@ export default function Layout() {
                         let order;
                         const mapLength = Object.keys(map).length;
 
-
                         switch (true) {
-                            case (i === 0):
+                            case (i === 1):
                                 order = "first";
                                 break;
                             case (i === mapLength - 1):
@@ -131,7 +133,7 @@ export default function Layout() {
     const profileBtnsMap = {
         "Log In": {path: "login", loggedIn: false},
 
-        "Linked Accounts": {path: "accounts", loggedIn: true},
+        "Profile": {path: "profile", loggedIn: true},
         "Log Out": {path: "logout", loggedIn: true},
     }
 
@@ -148,7 +150,7 @@ export default function Layout() {
         "Home": {path: "", loggedIn: null},
         "Sign Up": {path: "signup", loggedIn: false},
         "Log In": {path: "login", loggedIn: false},
-        "My Music": {path: isLoggedIn ? "accounts/authorize": "signup", loggedIn: true}
+        "My Music": {path: isLoggedIn ? "music/select" : "signup", loggedIn: true},
     }
 
     const navButtonsLoggedOut = [];
@@ -172,25 +174,71 @@ export default function Layout() {
 
     return (
         <>
-            <div id="header">
-                <nav>
-                    <div>
-                        <Link to="/FindMySound/">
-                            <img id="logo" src={fmsLogo} alt="Logo"></img>
-                        </Link>
+
+            <div id="page-container">
+                <div id="header">
+                    <nav>
+                        <div>
+                            <Link to="/FindMySound/">
+                                <img id="logo" src={fmsLogo} alt="Logo"></img>
+                            </Link>
+                        </div>
+                        <ul>
+
+                            {navBarButtons}
+
+                            <ButtonDropdownComponent profileImg={user?.spotify_profile?.spotify_profile_image}
+                                                     isLoading={isLoading}
+                                                     menuItems={profileButtons}/>
+
+                        </ul>
+                    </nav>
+                    <hr id="divider"></hr>
+                </div>
+
+                {/*This is essentially the "parent" route. Layout is always active. The Outlet tag below ensures that
+                everything which is wrapped by Layout gets rendered as a child. So, its always "Layout + <some other route>"
+                where <some other route> is the child route of Layout:
+
+                <BrowserRouter>
+                <Routes>
+                    <Route path="/FindMySound/" element={<Layout/>}>
+
+                        <Route index element={
+                            <AuthWrapper> <Home/> </AuthWrapper>
+                        }/>
+                 .... ETC
+
+                 Notice how everything is wrapped by Layout!
+                */}
+
+
+                <div id="main-content">
+                    <Outlet/>
+                </div>
+
+                <footer id="footer">
+                    <p id="copyright">&copy; 2025 Andrew Pols. All Rights Reserved.</p>
+
+
+                    <div id="pols-external-container">
+                        <a href="http://linkedin.com/in/andrewpols" target="_blank" id="pols-external-route">
+                            <div>
+                                <img id="pols-external-img" src={linkedInSVG} alt="linked-in"/>
+                                LinkedIn
+                            </div>
+                        </a>
+
+                        <a href="http://github.com/andrewpols" target="_blank" id="pols-external-route">
+                            <div>
+                                <img id="pols-external-img" src={githubSVG} alt="github"/>
+                                GitHub
+                            </div>
+                        </a>
                     </div>
-                    <ul>
-
-                        {navBarButtons}
-
-                        <ButtonDropdownComponent profileImg={defaultProfile}
-                                                 menuItems={profileButtons}/>
-
-                    </ul>
-                </nav>
-                <hr id="divider"></hr>
+                </footer>
             </div>
-            <Outlet/>
+
         </>
     );
 }

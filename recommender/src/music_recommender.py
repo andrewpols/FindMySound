@@ -34,69 +34,34 @@ class Artist:
         self.name = name
         self.spotify_id = spotify_id
 
-    def get_top_n_songs(self, n: int = 25) -> list[dict]:
+    def get_top_n_songs(self, spotify_profile, n: int = 25) -> list[dict]:
         """Returns the top <n> songs by their respective identifying ISRC codes."""
 
         spotify_api_url = (
             f"https://api.spotify.com/v1/artists/{self.spotify_id}/top-tracks"
         )
 
-        # TODO: Change to session variable after Django setup
-        access_token = get_spotify_access_token()
-
-        headers = {"Authorization": f"Bearer {access_token}"}
+        headers = {"Authorization": f"Bearer {spotify_profile.access_token}"}
 
         response = requests.get(url=spotify_api_url, headers=headers)
 
         response.raise_for_status()
 
-        if response:
-            track_list = []
+        if response.status_code != 200:
+            return []
 
-            for track in response.json()["tracks"][:n]:
-                track_data = {
-                    "title": track["name"],
-                    "artist": self,
-                    "isrc": track["external_ids"]["isrc"],
-                }
+        track_list = []
 
-                track_list.append(track_data)
+        for track in response.json()["tracks"][:n]:
+            track_data = {
+                "title": track["name"],
+                "artist": self,
+                "isrc": track["external_ids"]["isrc"],
+            }
 
-            return track_list
+            track_list.append(track_data)
 
-        return []
-
-
-# noinspection PyTypeChecker
-def get_spotify_access_token() -> str:
-    """Return an access token via the Spotify Client Credentials Code Flow.
-    Note that this is different from the Authorization Code Flow, which uses User OAuth, granting user-specific data.
-    Client Credentials is a server-to-server flow, allowing access to look up Spotify endpoints like track/artist/album
-    data, not user data (and so requires fewer steps than OAuth).
-    """
-
-    token_url = "https://accounts.spotify.com/api/token"
-
-    client_id = os.environ.get("SPOTIFY_CLIENT_ID", "")
-    client_secret = os.environ.get("SPOTIFY_CLIENT_SECRET", "")
-
-    auth = f"{client_id}:{client_secret}"
-
-    # str -> bytes -> b64 bytes -> str
-    auth_encoded = base64.b64encode(auth.encode()).decode()
-
-    headers = {"Authorization": f"Basic {auth_encoded}"}
-
-    form = {"grant_type": "client_credentials"}
-
-    response = requests.post(url=token_url, headers=headers, data=form)
-
-    response.raise_for_status()
-
-    if response and response.status_code == 200:
-        return response.json()["access_token"]
-    else:
-        return "ERROR obtaining access token: " + response.status_code
+        return track_list
 
 
 class Song:
@@ -397,15 +362,6 @@ def main():
     ovoxo_recommender = Recommender(ovoxo_playlist)
 
     print(ovoxo_recommender.reccommend_songs())
-
-
-def test_artist():
-    print("here")
-    weeknd = Artist(
-        "The Weeknd",
-        "1Xyo4u8uXC1ZmMpatF05PJ")
-
-    print(weeknd.get_top_n_songs())
 
 
 async def test_analysis():

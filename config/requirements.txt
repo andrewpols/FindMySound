@@ -20,3 +20,5 @@ django-cors-headers
 # vite
 # react-router-dom
 # axios
+# dotLottie
+# smoothscroll polyfill

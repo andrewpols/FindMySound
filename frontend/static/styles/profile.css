@@ -1,0 +1,141 @@
+
+
+#root-container {
+    position: absolute;
+    box-sizing: border-box;
+    top: 0;
+    left: 15%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+
+    width: 70%;
+    height: 100%;
+}
+
+.card-row {
+    display: flex;
+    gap: 20px;
+    width: 100%;
+}
+
+.user-info-card {
+    background-color: rgb(14, 14, 14);
+    margin: 0;
+    padding: 0px 0 20px 0px;
+    border-radius: 8px;
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#profile-info {
+    padding-left: 50px;
+    margin-bottom: 10px;
+    box-shadow: rgba(0, 162, 80, 0.2) 0 2px 12px;
+    align-items: start;
+}
+
+
+#username, #stats-header {
+    margin-bottom: 20px;
+}
+
+#stats-header {
+    text-align: start;
+    font-size: 2.4rem;
+}
+
+.find-my-sound {
+    color: #1DB954;
+}
+
+#user-stats, #user-info {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: 15px;
+    margin: 0;
+}
+
+#user-stats > h2, #user-info > h2 {
+    margin: 0;
+}
+
+#linked-accounts-info {
+    box-shadow: rgba(0, 162, 80, 0.2) 0 -2px 12px;
+    padding-bottom: 0;
+    width: 60%;
+    margin: 0;
+    flex-wrap: wrap;
+    justify-content: stretch;
+}
+
+#spotify-details {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 90%;
+    padding-left: 10%;
+    margin: 15px 0 25px 0;
+    height: 1px;
+    border: 0;
+    border-top: 2px solid #201e1e;
+}
+
+.img-name-container {
+    margin-right: 40px;
+}
+
+.img-name-container h2 {
+    padding: 0;
+    margin: 0;
+}
+
+#spotify-img {
+    width: 70px;
+    height: auto;
+}
+
+.link-btn {
+    margin-bottom: 60px;
+    padding: 16px 20px;
+    font-weight: bold;
+    margin-top: 20px;
+    color: white;
+    background-color: #151414;
+    border: 0;
+
+    box-shadow: rgba(255, 255, 255, 0.2) 0 8px 12px;
+}
+
+.link-txt {
+    color: #60d360;
+    margin-left: -10px;
+}
+
+.link-btn:hover {
+    transition: 0.2s;
+    box-shadow: rgb(213, 202, 202) 0 4px 10px;
+}
+
+.link-btn:active {
+    box-shadow: rgba(30, 215, 96, 1) 0 1px 8px;
+    transform: translate(0, 1px);
+    border: 0;
+    color: rgba(30, 215, 96, 1);
+}
